@@ -2,7 +2,6 @@ package db
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"os"
 
@@ -20,8 +19,6 @@ func ConnectClient() *mongo.Client {
 	dbUser := os.Getenv("DB_USER")
 	dbPass := os.Getenv("DB_PASS")
 	finalDB := "mongodb://" + dbUser + ":" + dbPass + "@" + dbURL
-
-	fmt.Println(finalDB)
 
 	clientOptions := options.Client().ApplyURI(finalDB)
 	client, err := mongo.NewClient(clientOptions)
