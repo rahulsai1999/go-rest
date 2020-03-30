@@ -1,6 +1,9 @@
 package main
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	"github.com/rahulsai1999/go-rest/service"
+)
 
 func ping(ctx *gin.Context) {
 	ctx.JSON(200, gin.H{
@@ -20,6 +23,8 @@ func main() {
 
 	// route handling for named functions
 	router.GET("/ping", ping)
+
+	router.POST("/add", service.PostForm)
 
 	router.Run(":8000")
 }
