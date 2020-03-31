@@ -20,6 +20,7 @@ func ExtRouter(port string) {
 	router.GET("/ping", api.Ping)
 	router.GET("/blog/:id", api.GetBlogs)
 	router.POST("/blog", api.InsertBlog)
+	router.PUT("/blog/:id", api.UpdateBlog)
 
 	router.Run(port)
 }
