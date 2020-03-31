@@ -18,6 +18,7 @@ func ExtRouter(port string) {
 
 	// route handling for external
 	router.GET("/ping", api.Ping)
+	router.GET("/blog", api.GetAllBlogs)
 	router.GET("/blog/:id", api.GetBlogs)
 	router.POST("/blog", api.InsertBlog)
 	router.PUT("/blog/:id", api.UpdateBlog)
