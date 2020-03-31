@@ -33,8 +33,8 @@ func ConnectClient() *mongo.Client {
 	return client
 }
 
-// Ping -> checks database connection
-func Ping() {
+// Ping -> checks database connection and returns the client object
+func Ping() *mongo.Client {
 	client := ConnectClient()
 	err := client.Ping(context.Background(), readpref.Primary())
 	if err != nil {
@@ -42,4 +42,5 @@ func Ping() {
 	} else {
 		log.Println("Connected!")
 	}
+	return client
 }
