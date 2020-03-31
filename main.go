@@ -1,7 +1,14 @@
 package main
 
-import "github.com/rahulsai1999/go-rest/service"
+import (
+	"os"
+
+	"github.com/joho/godotenv"
+	"github.com/rahulsai1999/go-rest/service"
+)
 
 func main() {
-	service.ExtRouter(":5000")
+	godotenv.Load()
+	port := os.Getenv("PORT")
+	service.ExtRouter(port)
 }

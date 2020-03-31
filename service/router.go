@@ -23,5 +23,5 @@ func ExtRouter(port string) {
 	router.PUT("/blog/:id", api.UpdateBlog)
 	router.DELETE("/blog/:id", api.DeleteBlog)
 
-	router.Run(port)
+	router.Run(":" + port)
 }
