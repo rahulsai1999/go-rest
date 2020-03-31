@@ -22,8 +22,8 @@ func GetBlogs(ctx *gin.Context) {
 	id := ctx.Param("id")
 	docID, _ := primitive.ObjectIDFromHex(id)
 	result := models.Blog{}
-
-	err := collection.FindOne(context.Background(), bson.M{"_id": docID}).Decode(&result)
+	filter := bson.M{"_id": docID}
+	err := collection.FindOne(context.Background(), filter).Decode(&result)
 	if err != nil {
 		log.Fatal(err)
 	} else {

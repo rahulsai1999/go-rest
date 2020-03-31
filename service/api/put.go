@@ -17,19 +17,19 @@ func UpdateBlog(ctx *gin.Context) {
 	author := ctx.PostForm("author")
 	body := ctx.PostForm("body")
 
+	docID, _ := primitive.ObjectIDFromHex(id)
 	blog := models.Blog{
 		Title:  title,
 		Author: author,
 		Body:   body,
 	}
-
 	update := bson.M{
 		"$set": blog,
 	}
 
-	docID, _ := primitive.ObjectIDFromHex(id)
+	filter := bson.M{"_id": docID}
 	result := models.Blog{}
-	err := collection.FindOneAndUpdate(context.Background(), bson.M{"_id": docID}, update).Decode(&result)
+	err := collection.FindOneAndUpdate(context.Background(), filter, update).Decode(&result)
 
 	if err != nil {
 		log.Fatal(err)
