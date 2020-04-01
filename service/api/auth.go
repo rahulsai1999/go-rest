@@ -1,9 +1,11 @@
 package api
 
 import (
+	"context"
 	"log"
 
 	"github.com/gin-gonic/gin"
+	"github.com/rahulsai1999/go-rest/service/models"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -28,14 +30,29 @@ func compareHSPassword(hash string, pwd string) bool {
 
 //Signup -> route for creating new users
 func Signup(ctx *gin.Context) {
-	username := ctx.PostForm("username")
+	name := ctx.PostForm("name")
+	email := ctx.PostForm("email")
 	password := ctx.PostForm("password")
 	password = generateHSPassword(password)
 
-	ctx.JSON(200, gin.H{
-		"username":    username,
-		"hashed_pass": password,
-	})
+	user := models.User{
+		Name:  name,
+		Email: email,
+		Hash:  password,
+	}
+
+	result, err := collectionUsers.InsertOne(context.Background(), user)
+
+	if err != nil {
+		log.Fatal(err)
+	} else {
+		ctx.JSON(200, gin.H{
+			"_id":         result.InsertedID,
+			"name":        name,
+			"email":       email,
+			"hashed_pass": password,
+		})
+	}
 }
 
 //Login -> route for login users

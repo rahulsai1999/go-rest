@@ -7,7 +7,9 @@ import (
 
 // initializes single database collection object for all the api requests
 var collection *mongo.Collection
+var collectionUsers *mongo.Collection
 
 func init() {
 	collection = db.ConnectClient().Database("golang-api").Collection("blogs")
+	collectionUsers = db.ConnectClient().Database("golang-api").Collection("users")
 }
