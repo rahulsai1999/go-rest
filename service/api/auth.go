@@ -14,7 +14,7 @@ import (
 
 func generateHSPassword(pwd string) string {
 	BBpwd := []byte(pwd)
-	hash, err := bcrypt.GenerateFromPassword(BBpwd, 8)
+	hash, err := bcrypt.GenerateFromPassword(BBpwd, costI)
 	if err != nil {
 		log.Fatal(err)
 	}
