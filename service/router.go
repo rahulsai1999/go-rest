@@ -25,5 +25,10 @@ func ExtRouter(port string, mode string) {
 	router.PUT("/blog/:id", api.UpdateBlog)
 	router.DELETE("/blog/:id", api.DeleteBlog)
 
+	//auth routes
+	authGroup := router.Group("/auth")
+	authGroup.POST("/signup", api.Signup)
+	authGroup.POST("/login", api.Login)
+
 	router.Run(":" + port)
 }
