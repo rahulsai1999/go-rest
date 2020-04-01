@@ -10,5 +10,6 @@ import (
 func main() {
 	godotenv.Load()
 	port := os.Getenv("PORT")
-	service.ExtRouter(port)
+	mode := os.Getenv("MODE")
+	service.ExtRouter(port, mode)
 }

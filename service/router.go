@@ -6,7 +6,8 @@ import (
 )
 
 //ExtRouter Custom Router
-func ExtRouter(port string) {
+func ExtRouter(port string, mode string) {
+	gin.SetMode(mode)
 	router := gin.Default()
 
 	// route handling basic
