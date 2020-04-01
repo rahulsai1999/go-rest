@@ -1,6 +1,8 @@
 sudo: required
 services:
   - docker
+before_script:
+  - env >> .env
 script:
   - docker build -t noneuser2183/go-rest .
   - echo "$docpass" | docker login -u "$docid" --password-stdin
