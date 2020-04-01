@@ -29,6 +29,7 @@ func ExtRouter(port string, mode string) {
 	authGroup := router.Group("/auth")
 	authGroup.POST("/signup", api.Signup)
 	authGroup.POST("/login", api.Login)
+	authGroup.GET("/refresh", api.Refresh)
 
 	router.Run(":" + port)
 }

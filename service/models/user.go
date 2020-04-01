@@ -19,3 +19,8 @@ type Claims struct {
 	Email string             `json:"email"`
 	jwt.StandardClaims
 }
+
+//Header -> model for decoding header
+type Header struct {
+	Authorization string `header:"Authorization"`
+}

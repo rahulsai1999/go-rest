@@ -3,6 +3,8 @@ package api
 import (
 	"context"
 	"log"
+	"net/http"
+	"strings"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -99,4 +101,47 @@ func Login(ctx *gin.Context) {
 			"message": "Wrong Password",
 		})
 	}
+}
+
+//Refresh -> to refresh the jwt tokens (background task)
+func Refresh(ctx *gin.Context) {
+	h := models.Header{}
+	err := ctx.ShouldBindHeader(&h)
+	if err != nil {
+		ctx.JSON(200, err)
+	}
+
+	tknStr := strings.Split(h.Authorization, " ")[1]
+	claims := &models.Claims{}
+	tkn, err := jwt.ParseWithClaims(tknStr, claims, func(token *jwt.Token) (interface{}, error) {
+		return jwtKey, nil
+	})
+
+	if !tkn.Valid {
+		ctx.JSON(200, gin.H{
+			"message": "Unauthorized",
+		})
+	} else if err != nil {
+		if err == jwt.ErrSignatureInvalid {
+			ctx.JSON(http.StatusUnauthorized, gin.H{})
+		}
+		ctx.JSON(http.StatusBadRequest, gin.H{})
+
+	} else {
+		expirationTime := time.Now().Add(10 * time.Minute)
+		claims.ExpiresAt = expirationTime.Unix()
+		token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+		tokenString, err := token.SignedString(jwtKey)
+		if err != nil {
+			ctx.JSON(500, gin.H{
+				"message": "Internal Server Error",
+			})
+		} else {
+			ctx.JSON(200, gin.H{
+				"old_token": tknStr,
+				"new_token": tokenString,
+			})
+		}
+	}
+
 }
