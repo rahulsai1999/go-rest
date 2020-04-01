@@ -1,0 +1,7 @@
+sudo: required
+services:
+  - docker
+script:
+  - docker build -t noneuser2183/go-rest .
+  - echo "$docpass" | docker login -u "$docid" --password-stdin
+  - docker push noneuser2183/go-rest
