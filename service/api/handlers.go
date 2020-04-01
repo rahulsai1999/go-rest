@@ -25,7 +25,7 @@ func GetAllBlogs(ctx *gin.Context) {
 	findOptions.SetLimit(5)
 
 	var results []models.Blog
-	cur, err := collection.Find(context.TODO(), filter, findOptions)
+	cur, err := collectionBlogs.Find(context.TODO(), filter, findOptions)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -59,7 +59,7 @@ func GetBlogs(ctx *gin.Context) {
 	docID, _ := primitive.ObjectIDFromHex(id)
 	result := models.Blog{}
 	filter := bson.M{"_id": docID}
-	err := collection.FindOne(context.Background(), filter).Decode(&result)
+	err := collectionBlogs.FindOne(context.Background(), filter).Decode(&result)
 	if err != nil {
 		log.Fatal(err)
 	} else {
@@ -81,7 +81,7 @@ func InsertBlog(ctx *gin.Context) {
 		Body:   body,
 	}
 
-	result, err := collection.InsertOne(context.Background(), blog)
+	result, err := collectionBlogs.InsertOne(context.Background(), blog)
 
 	if err != nil {
 		log.Fatal(err)
@@ -111,7 +111,7 @@ func UpdateBlog(ctx *gin.Context) {
 
 	filter := bson.M{"_id": docID}
 	result := models.Blog{}
-	err := collection.FindOneAndUpdate(context.Background(), filter, update).Decode(&result)
+	err := collectionBlogs.FindOneAndUpdate(context.Background(), filter, update).Decode(&result)
 
 	if err != nil {
 		log.Fatal(err)
@@ -129,7 +129,7 @@ func DeleteBlog(ctx *gin.Context) {
 	docID, _ := primitive.ObjectIDFromHex(id)
 	result := models.Blog{}
 	filter := bson.M{"_id": docID}
-	err := collection.FindOneAndDelete(context.Background(), filter).Decode(&result)
+	err := collectionBlogs.FindOneAndDelete(context.Background(), filter).Decode(&result)
 
 	if err != nil {
 		log.Fatal(err)

@@ -1,6 +1,9 @@
 package models
 
-import "go.mongodb.org/mongo-driver/bson/primitive"
+import (
+	"github.com/dgrijalva/jwt-go"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
 
 // User -> model for User object
 type User struct {
@@ -8,4 +11,11 @@ type User struct {
 	Name  string             `bson:"name,omitempty"`
 	Email string             `bson:"email,omitempty"`
 	Hash  string             `bson:"hash,omitempty"`
+}
+
+//Claims -> model for jwt claim
+type Claims struct {
+	ID    primitive.ObjectID `bson:"_id,omitempty"`
+	Email string             `json:"email"`
+	jwt.StandardClaims
 }

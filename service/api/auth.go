@@ -3,7 +3,9 @@ package api
 import (
 	"context"
 	"log"
+	"time"
 
+	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"github.com/rahulsai1999/go-rest/service/models"
 	"go.mongodb.org/mongo-driver/bson"
@@ -65,14 +67,36 @@ func Login(ctx *gin.Context) {
 
 	err := collectionUsers.FindOne(context.Background(), filter).Decode(&result)
 	cResult := compareHSPassword(result.Hash, password)
+
 	if err != nil {
 		ctx.JSON(200, gin.H{
 			"message": "User Not Found",
 		})
+	} else if cResult == true {
+		expirationTime := time.Now().Add(10 * time.Minute)
+		claims := &models.Claims{
+			Email: result.Email,
+			ID:    result.ID,
+			StandardClaims: jwt.StandardClaims{
+				ExpiresAt: expirationTime.Unix(),
+			},
+		}
+
+		token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+		tokenString, err := token.SignedString(jwtKey)
+		if err != nil {
+			ctx.JSON(500, gin.H{
+				"message": "Internal Server Error. Try Again",
+			})
+		} else {
+			ctx.JSON(200, gin.H{
+				"email": result.Email,
+				"token": tokenString,
+			})
+		}
 	} else {
 		ctx.JSON(200, gin.H{
-			"email":        result.Email,
-			"login_status": cResult,
+			"message": "Wrong Password",
 		})
 	}
 }
