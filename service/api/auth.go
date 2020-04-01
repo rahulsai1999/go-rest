@@ -6,6 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/rahulsai1999/go-rest/service/models"
+	"go.mongodb.org/mongo-driver/bson"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -57,13 +58,21 @@ func Signup(ctx *gin.Context) {
 
 //Login -> route for login users
 func Login(ctx *gin.Context) {
-	username := ctx.PostForm("username")
+	email := ctx.PostForm("email")
 	password := ctx.PostForm("password")
-	exampleHash := "$2a$12$15C6HjXMRwYns0l.DgXGru56n69L5BmgYLmYYfGXmHT1VcH3ezlEK"
-	cResult := compareHSPassword(exampleHash, password)
+	filter := bson.M{"email": email}
+	result := models.User{}
 
-	ctx.JSON(200, gin.H{
-		"username":     username,
-		"login_status": cResult,
-	})
+	err := collectionUsers.FindOne(context.Background(), filter).Decode(&result)
+	cResult := compareHSPassword(result.Hash, password)
+	if err != nil {
+		ctx.JSON(200, gin.H{
+			"message": "User Not Found",
+		})
+	} else {
+		ctx.JSON(200, gin.H{
+			"email":        result.Email,
+			"login_status": cResult,
+		})
+	}
 }
