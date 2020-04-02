@@ -6,7 +6,7 @@ import (
 )
 
 //ExtRouter Custom Router
-func ExtRouter(port string, mode string) {
+func ExtRouter(mode string) *gin.Engine {
 	gin.SetMode(mode)
 	router := gin.Default()
 
@@ -18,6 +18,7 @@ func ExtRouter(port string, mode string) {
 	})
 
 	// route handling for external
+	router.GET("/ping", api.Ping)
 	router.GET("/blog", api.GetAllBlogs)
 	router.GET("/blog/:id", api.GetBlogs)
 
@@ -25,7 +26,6 @@ func ExtRouter(port string, mode string) {
 	authonly := router.Group("/")
 	authonly.Use(api.LoginMiddleware())
 	{
-		authonly.GET("/ping", api.Ping)
 		authonly.POST("/blog", api.InsertBlog)
 		authonly.PUT("/blog/:id", api.UpdateBlog)
 		authonly.DELETE("/blog/:id", api.DeleteBlog)
@@ -37,5 +37,5 @@ func ExtRouter(port string, mode string) {
 	authGroup.POST("/login", api.Login)
 	authGroup.GET("/refresh", api.Refresh)
 
-	router.Run(":" + port)
+	return router
 }

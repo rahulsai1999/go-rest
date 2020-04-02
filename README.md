@@ -7,6 +7,7 @@
 - Connected to MongoDB
 - Uses Go Modules
 - Implements basic CRUD operations (for now)
+- Implements Authentication from scratch using Bcrypt and JWT
 
 ## To run
 
