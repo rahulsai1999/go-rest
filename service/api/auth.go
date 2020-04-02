@@ -145,3 +145,39 @@ func Refresh(ctx *gin.Context) {
 	}
 
 }
+
+// LoginMiddleware -> check if the user is logged in
+func LoginMiddleware() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		h := models.Header{}
+		err := ctx.ShouldBindHeader(&h)
+		if err != nil {
+			ctx.JSON(http.StatusOK, gin.H{
+				"message": "err",
+			})
+		}
+
+		if len(h.Authorization) == 0 {
+			ctx.JSON(200, gin.H{
+				"message": "NO TOKEN || Login to access this route",
+			})
+			ctx.Abort()
+		} else {
+			tknStr := strings.Split(h.Authorization, " ")[1]
+			claims := &models.Claims{}
+			tkn, _ := jwt.ParseWithClaims(tknStr, claims, func(token *jwt.Token) (interface{}, error) {
+				return jwtKey, nil
+			})
+
+			if !tkn.Valid {
+				ctx.JSON(200, gin.H{
+					"message": "Token Invalid, Login to access this route",
+				})
+				ctx.Abort()
+			} else {
+				ctx.Next()
+			}
+		}
+
+	}
+}
