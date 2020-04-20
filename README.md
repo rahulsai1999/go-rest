@@ -20,6 +20,7 @@
 ```sh
 git clone https://github.com/rahulsai1999/go-rest.git
 cd go-rest
+go get -u
 go run ./main.go
 ```
 
